@@ -33,11 +33,42 @@ class AuthService
      */
     public function signupUser(SignupRequest $request): User
     {
-        $user = $this->userService->storeUser([
-            'name' => $request->name,
+        $user_values = [
+            'type' => $request->type,
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
             'email' => $request->email,
+            'address' => $request->address,
+            'city' => $request->city,
+            'country' => $request->country,
+            'phone_number' => $request->phoneNumber,
+            'nationality' => $request->nationality,
+            'terms_and_condition' => $request->termsAndCondition,
+            'privacy_policy' => $request->privacyPolicy,
             'password' => Hash::make($request->password),
-        ]);
+        ];
+
+        if( $request->type == 'hero' ) {
+            $user_values += [
+                'why_our_initiative_is_important' => $request->whyOurInitiativeIsImportant,
+                'what_do_you_hope_to_get_out_of_the_heros_academy_course' => $request->whatDoYouHopeToGetOutOfTheHerosAcademyCourse,
+                'project_length_of_project_on_weeks' => $request->projectLengthOfProjectOnWeeks,
+                'what_passsion_do_you_have' => $request->whatPasssionDoYouHave,
+                'what_expertise_would_you_like_to_sell_to_international_clients' => $request->whatExpertiseWouldYouLikeToSellToInternationalClients,
+                'what_do_you_plan_to_spend_the_initial_kickstart_sponsorship' => $request->whatDoYouPlanToSpendTheInitialKickstartSponsorship,
+                'project_name' => $request->projectName,
+                'project_impact' => $request->projectImpact,
+                'project_theme' => $request->projectTheme,
+            ];
+        } else {
+            $user_values += [
+                'company_esg_initiatives' => $request->companyESGInitiatives,
+                'ideal_esg_project' => $request->idealESGProject,
+                'most_important_un_sdgs' => $request->mostImportantUNSDGS,
+            ];
+        }
+
+        $user = $this->userService->storeUser($user_values);
 
         return $user;
     }
